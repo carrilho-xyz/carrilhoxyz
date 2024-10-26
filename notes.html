@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Gym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0A0E17;
+            --text-color: #E0E0E0;
+            --accent-color: #6C63FF;
+            --secondary-bg: #141B2D;
+            --button-color: #1E2A45;
+            --spacing: 25px;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-color), #111827);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .notes-container {
+            background: var(--secondary-bg);
+            border-radius: 15px;
+            padding: var(--spacing);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: var(--spacing);
+        }
+        .note-input {
+            width: 100%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1em;
+            margin-bottom: 20px;
+            resize: none;
+            height: 100px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        .note-input:focus {
+            outline: none;
+            border-color: #8B85FF;
+        }
+        .note-input::placeholder {
+            color: #6C7693;
+        }
+        .button {
+            background: linear-gradient(135deg, var(--button-color), #2A3A5A);
+            border: none;
+            color: var(--text-color);
+            padding: 15px 25px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .button:hover {
+            background: linear-gradient(135deg, var(--accent-color), #8B85FF);
+        }
+        .notes-list {
+            margin-top: var(--spacing);
+        }
+        .note-item {
+            background: linear-gradient(135deg, var(--secondary-bg), #1A2337);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+        }
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .note-actions button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="notes-container">
+        <h1>Notas Gym</h1>
+        <textarea class="note-input" placeholder="escreve aqui..." rows="4"></textarea>
+        <button class="button" id="add-note">Adicionar Nota</button>
+        <div class="notes-list" id="notes-list">
+            <!-- As notas serão adicionadas aqui dinamicamente -->
+        </div>
+    </div>
+
+    <script>
+        const noteInput = document.querySelector('.note-input');
+        const addNoteButton = document.getElementById('add-note');
+        const notesList = document.getElementById('notes-list');
+
+        let notes = JSON.parse(localStorage.getItem('gymNotes')) || [];
+
+        function renderNotes() {
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note-item');
+                noteElement.innerHTML = `
+                    <p>${note}</p>
+                    <div class="note-actions">
+                        <button onclick="editNote(${index})">Editar</button>
+                        <button onclick="deleteNote(${index})">Excluir</button>
+                    </div>
+                `;
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        function addNote() {
+            const noteText = noteInput.value.trim();
+            if (noteText) {
+                notes.push(noteText);
+                localStorage.setItem('gymNotes', JSON.stringify(notes));
+                noteInput.value = '';
+                renderNotes();
+            }
+        }
+
+        function editNote(index) {
+            const newText = prompt('Editar nota:', notes[index]);
+            if (newText !== null) {
+                notes[index] = newText.trim();
+                localStorage.setItem('gymNotes', JSON.stringify(notes));
+                renderNotes();
+            }
+        }
+
+        function deleteNote(index) {
+            if (confirm('Tem certeza que deseja excluir esta nota?')) {
+                notes.splice(index, 1);
+                localStorage.setItem('gymNotes', JSON.stringify(notes));
+                renderNotes();
+            }
+        }
+
+        addNoteButton.addEventListener('click', addNote);
+        renderNotes();
+    </script>
+</body>
+</html>
