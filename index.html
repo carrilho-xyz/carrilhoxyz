@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Gym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0A0E17;
+            --text-color: #E0E0E0;
+            --accent-color: #6C63FF;
+            --secondary-bg: #141B2D;
+            --calorie-color: #00B8D9;
+            --reminder-color: #FF5630;
+            --button-color: #1E2A45;
+            --spacing: 25px;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-color), #111827);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        main {
+            padding: var(--spacing);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .rectangle {
+            background: linear-gradient(135deg, var(--secondary-bg), #1A2337);
+            border-radius: 15px;
+            padding: var(--spacing);
+            margin-bottom: var(--spacing);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 0;
+        }
+        .rectangles-container {
+            display: flex;
+            gap: var(--spacing);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+        }
+        .calendar-day {
+            background: linear-gradient(135deg, var(--accent-color), #8B85FF);
+            border-radius: 3px;
+            aspect-ratio: 1 / 1;
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stats-box {
+            background: linear-gradient(135deg, var(--accent-color), #8B85FF);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            color: var(--text-color);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .calorie-box {
+            background: linear-gradient(135deg, var(--calorie-color), #33C9FF);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            color: var(--text-color);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .stats-number, .calorie-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stats-label, .calorie-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .stats-unit, .calorie-unit {
+            font-size: 0.9em;
+        }
+        .stats-description, .stats-motivation, .calorie-description, .calorie-motivation {
+            margin: 0;
+        }
+        .stats-motivation, .calorie-motivation {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        .reminder {
+            background: linear-gradient(135deg, var(--secondary-bg), #1A2337);
+            color: var(--reminder-color);
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--reminder-color);
+        }
+        .button {
+            background: linear-gradient(135deg, var(--button-color), #2A3A5A);
+            color: var(--text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: var(--spacing);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            background: linear-gradient(135deg, var(--accent-color), #8B85FF);
+            color: var(--text-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--spacing);
+            margin-bottom: var(--spacing);
+        }
+        .button-half {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .button-container a.button {
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 50%; /* Mantém o tamanho igual ao do botão Calculator */
+        }
+
+        .dropbtn {
+            width: 100%;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--secondary-bg);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--button-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background: linear-gradient(135deg, var(--accent-color), #8B85FF);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="rectangle">
+            <div class="calendar-grid">
+                <!-- 31 dias serão inseridos aqui pelo JavaScript -->
+            </div>
+        </div>
+        
+        <div class="rectangle">
+            <div class="stats-container">
+                <div class="stats-text">
+                    <p class="stats-description">Total de Peso Levantado:</p>
+                    <p class="stats-motivation">Da para puxar mais!</p>
+                </div>
+                <div class="stats-box">
+                    <span class="stats-number">800</span>
+                    <span class="stats-unit">Kg</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rectangle">
+            <div class="stats-container">
+                <div class="stats-text">
+                    <p class="calorie-description">Calorias Consumidas Hoje:</p>
+                    <p class="calorie-motivation">Objetivo Alcançado</p>
+                </div>
+                <div class="calorie-box">
+                    <span class="calorie-number">2500</span>
+                    <span class="calorie-unit">kcal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rectangle reminder">
+            TOMA A CREATINA
+        </div>
+
+        <div class="button-container">
+            <a href="calculator.html" class="button button-half">Calculadora</a>
+            <a href="notes.html" class="button button-half">Notas</a>
+        </div>
+
+        <button class="button">Registar Treino</button>
+        <button class="button">Registar Comida</button>
+        <button class="button">Abrir Atividade</button>
+    </main>
+
+    <script>
+        function createCalendarGrid() {
+            const grid = document.querySelector('.calendar-grid');
+            for (let i = 1; i <= 31; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                grid.appendChild(day);
+            }
+        }
+
+        window.onload = createCalendarGrid;
+    </script>
+</body>
+</html>
